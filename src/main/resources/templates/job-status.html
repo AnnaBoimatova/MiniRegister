@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Статус задания</title>
+    <!-- Авто-обновление каждые 2 секунды, пока задание не завершено -->
+    <meta th:if="${job.status.name() == 'RUNNING'}"
+          http-equiv="refresh" content="2"/>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        .badge { display:inline-block; padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 14px; }
+        .RUNNING { background:#fff3cd; color:#856404; }
+        .DONE    { background:#d4edda; color:#155724; }
+        .FAILED  { background:#f8d7da; color:#721c24; }
+        .btn { display:inline-block; padding:7px 16px; background:#007bff; color:#fff; border-radius:4px; text-decoration:none; margin-top:16px; }
+        .btn-green { background:#28a745; }
+        table { border-collapse: collapse; margin-top: 14px; }
+        td, th { border:1px solid #ccc; padding:7px 14px; text-align:left; }
+        th { background:#f0f0f0; }
+    </style>
+</head>
+<body>
+
+<h2>Задание
+    <span class="badge" th:classappend="${job.status.name()}" th:text="${job.status}">RUNNING</span>
+</h2>
+
+<table>
+    <tr><th>ID задания</th>  <td th:text="${job.jobId}">—</td></tr>
+    <tr><th>Тип</th>         <td th:text="${job.type}">—</td></tr>
+    <tr><th>Статус</th>      <td th:text="${job.status}">—</td></tr>
+    <tr><th>Запущено</th>    <td th:text="${job.startedAt}">—</td></tr>
+    <tr th:if="${job.finishedAt != null}">
+        <th>Завершено</th>   <td th:text="${job.finishedAt}">—</td>
+    </tr>
+    <tr th:if="${job.resultFile != null}">
+        <th>Результат</th>   <td th:text="${job.resultFile}">—</td>
+    </tr>
+    <tr th:if="${job.message != null}">
+        <th>Сообщение</th>   <td th:text="${job.message}">—</td>
+    </tr>
+</table>
+
+<!-- Кнопка скачать CSV — только для завершённого экспорта -->
+<div th:if="${job.status.name() == 'DONE' and job.type.name() == 'EXPORT_CSV' and job.resultFile != null}"
+     style="margin-top:16px;">
+    <a class="btn btn-green"
+       th:href="@{/records/download(fileName=${job.resultFileName})}">
+        ⬇ Скачать CSV
+    </a>
+</div>
+
+<div style="margin-top: 20px;">
+    <a class="btn" href="/records">← Назад к списку</a>
+</div>
+
+<p th:if="${job.status.name() == 'RUNNING'}"
+   style="color:#888; font-size:13px; margin-top:12px;">
+    Страница обновляется автоматически каждые 2 секунды...
+</p>
+
+</body>
+</html>
