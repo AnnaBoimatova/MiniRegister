@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Бронь — детали</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; margin-top: 12px; min-width: 400px; }
+        th, td { border: 1px solid #ccc; padding: 10px 16px; text-align: left; }
+        th { background: #f0f0f0; width: 160px; }
+        .btn       { display: inline-block; padding: 7px 16px; color: #fff; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; margin-right: 6px; }
+        .btn-grey   { background: #6c757d; }
+        .btn-blue   { background: #007bff; }
+        .btn-yellow { background: #fd7e14; }
+        .btn-red    { background: #dc3545; }
+        .badge-NEW         { background: #cfe2ff; color: #084298; padding: 3px 10px; border-radius: 10px; font-size: 13px; }
+        .badge-IN_PROGRESS { background: #fff3cd; color: #664d03; padding: 3px 10px; border-radius: 10px; font-size: 13px; }
+        .badge-DONE        { background: #d1e7dd; color: #0a3622; padding: 3px 10px; border-radius: 10px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<h2>Бронь переговорной — детали</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <td th:text="${record.id}">—</td>
+    </tr>
+    <tr>
+        <th>Название брони</th>
+        <td th:text="${record.title}">—</td>
+    </tr>
+    <tr>
+        <th>Комментарий</th>
+        <td th:text="${record.description}">—</td>
+    </tr>
+    <tr>
+        <th>Статус</th>
+        <td>
+            <span th:classappend="'badge-' + ${record.status}"
+                  th:text="${record.status}">NEW</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Создано</th>
+        <td th:text="${record.createdAt}">—</td>
+    </tr>
+</table>
+
+<div style="margin-top: 20px;">
+    <!-- Назад к списку -->
+    <a class="btn btn-grey" href="/records">← К списку</a>
+
+    <!-- Редактировать -->
+    <a class="btn btn-yellow" th:href="@{/records/{id}/edit(id=${record.id})}">Редактировать</a>
+
+    <!-- Удалить -->
+    <form th:action="@{/records/{id}/delete(id=${record.id})}" method="post"
+          style="display:inline"
+          onsubmit="return confirm('Удалить эту бронь?')">
+        <button type="submit" class="btn btn-red">Удалить</button>
+    </form>
+</div>
+
+</body>
+</html>
